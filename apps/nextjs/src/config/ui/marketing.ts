@@ -13,24 +13,24 @@ export const getMarketingConfig = async ({
   return {
     mainNav: [
       {
-        title: "Libra AI",
-        href: "https://libra.dev/",
+        title: "Home",
+        href: `/`,
       },
       {
-        title: dict.marketing.main_nav_features,
-        href: `/#features`,
+        title: "Inspiration",
+        href: `/inspiration`,
       },
       {
-        title: dict.marketing.main_nav_pricing,
+        title: "Tutorials",
+        href: `/tutorials`,
+      },
+      {
+        title: "Tools",
+        href: `/tools`,
+      },
+      {
+        title: "Pricing",
         href: `/pricing`,
-      },
-      {
-        title: dict.marketing.main_nav_blog,
-        href: `/blog`,
-      },
-      {
-        title: dict.marketing.main_nav_documentation,
-        href: `/docs`,
       },
     ],
   };
