@@ -1,5 +1,5 @@
-import { ClerkProvider } from "@clerk/nextjs";
-import { Inter as FontSans } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import localFont from "next/font/local";
 
 import "~/styles/globals.css";
@@ -15,14 +15,18 @@ import { TailwindIndicator } from "~/components/tailwind-indicator";
 import { ThemeProvider } from "~/components/theme-provider";
 import { i18n } from "~/config/i18n-config";
 import { siteConfig } from "~/config/site";
+import { Providers } from "~/components/providers";
 
 // import { Suspense } from "react";
 // import { PostHogPageview } from "~/config/providers";
 
-const fontSans = FontSans({
-  subsets: ["latin"],
+const fontSans = {
   variable: "--font-sans",
-});
+};
+
+const fontMono = {
+  variable: "--font-mono",
+};
 
 // Font files can be colocated inside of `pages`
 const fontHeading = localFont({
@@ -72,25 +76,29 @@ export const metadata = {
   // manifest: `${siteConfig.url}/site.webmanifest`,
 };
 
-export default function RootLayout({
+import { getServerSession, authOptions } from "@saasfly/auth";
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(authOptions);
   return (
-    <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <head />
-        {/*<Suspense>*/}
-        {/*  <PostHogPageview />*/}
-        {/*</Suspense>*/}
-        <body
-          className={cn(
-            "min-h-screen bg-background font-sans antialiased",
-            fontSans.variable,
-            fontHeading.variable,
-          )}
-        >
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      {/*<Suspense>*/}
+      {/*  <PostHogPageview />*/}
+      {/*</Suspense>*/}
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased overflow-x-hidden",
+          GeistSans.variable,
+          GeistMono.variable,
+          fontHeading.variable,
+        )}
+      >
+        <Providers session={session}>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -102,8 +110,8 @@ export default function RootLayout({
             <Toaster />
             <TailwindIndicator />
           </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+        </Providers>
+      </body>
+    </html>
   );
 }
