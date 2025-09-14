@@ -137,24 +137,50 @@ export default function ImageToPromptPage() {
     setError("");
     
     try {
-      // 这里应该调用实际的AI API
-      // 暂时使用模拟数据
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      let response;
       
-      const mockPrompts = {
-        general: "A beautiful landscape with mountains in the background, clear blue sky, and green meadows in the foreground. The scene is peaceful and serene with natural lighting.",
-        flux: "landscape, mountains, blue sky, meadows, natural lighting, peaceful, serene",
-        midjourney: "beautiful landscape with mountains --ar 16:9 --v 6 --style raw --quality 2",
-        "stable-diffusion": "(beautiful landscape:1.2), mountains, blue sky, green meadows, natural lighting, peaceful, serene, high quality, detailed, photorealistic"
-      };
+      if (imageFile) {
+        // 使用FormData上传文件
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('modelType', selectedModel);
+        formData.append('language', selectedLanguage);
+        
+        response = await fetch('/api/image-to-prompt', {
+          method: 'POST',
+          body: formData,
+        });
+      } else if (imageUrl) {
+        // 使用JSON发送URL
+        response = await fetch('/api/image-to-prompt', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            imageUrl: imageUrl,
+            modelType: selectedModel,
+            language: selectedLanguage,
+          }),
+        });
+      } else {
+        throw new Error('No image file or URL provided');
+      }
       
-      setGeneratedPrompt(mockPrompts[selectedModel as keyof typeof mockPrompts] || mockPrompts.general);
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to generate prompt');
+      }
+      
+      setGeneratedPrompt(result.prompt);
     } catch (error) {
-      setError("生成提示词时出错，请重试");
+      console.error('Generate prompt error:', error);
+      setError(error instanceof Error ? error.message : "生成提示词时出错，请重试");
     } finally {
       setIsGenerating(false);
     }
-  }, [imagePreview, selectedModel]);
+  }, [imagePreview, imageFile, imageUrl, selectedModel, selectedLanguage]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -390,7 +416,25 @@ export default function ImageToPromptPage() {
                   </select>
                 </div>
                 
-
+                <div>
+                  <Button
+                    onClick={handleGeneratePrompt}
+                    disabled={!imagePreview || isGenerating}
+                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+                  >
+                    {isGenerating ? (
+                       <>
+                         <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />
+                         Generating...
+                       </>
+                     ) : (
+                       <>
+                         <Icons.Rocket className="mr-2 h-4 w-4" />
+                         Generate Prompt
+                       </>
+                     )}
+                  </Button>
+                </div>
 
               </div>
             </div>
