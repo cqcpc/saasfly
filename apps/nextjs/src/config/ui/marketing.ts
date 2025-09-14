@@ -9,7 +9,7 @@ export const getMarketingConfig = async ({
     lang: Locale;
   };
 }): Promise<MarketingConfig> => {
-  const dict = await getDictionary(lang);
+  const _dict = await getDictionary(lang);
   return {
     mainNav: [
       {

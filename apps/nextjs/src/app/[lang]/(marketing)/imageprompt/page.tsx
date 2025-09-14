@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
+import _Link from "next/link";
 
-import { Button } from "@saasfly/ui/button";
+import { Button as _Button } from "@saasfly/ui/button";
 import * as Icons from "@saasfly/ui/icons";
 
 export default function ImagePromptPage() {

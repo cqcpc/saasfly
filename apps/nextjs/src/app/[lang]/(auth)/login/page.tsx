@@ -1,5 +1,5 @@
 import React from "react";
-import type { Metadata } from "next";
+import type { Metadata as _Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,12 +10,6 @@ import * as Icons from "@saasfly/ui/icons";
 import { UserAuthForm } from "~/components/user-auth-form";
 import type { Locale } from "~/config/i18n-config";
 import { getDictionary } from "~/lib/get-dictionary";
-
-export const metadata: Metadata = {
-  title: "Login",
-  description: "Login to your account",
-};
-
 export default async function LoginPage({
   params: { lang },
 }: {

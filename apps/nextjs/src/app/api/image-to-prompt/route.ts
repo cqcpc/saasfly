@@ -9,21 +9,25 @@ export async function POST(request: NextRequest) {
     let language = 'en';
 
     // 检查Content-Type来决定如何解析请求体
-    const contentType = request.headers.get('content-type') || '';
+    const contentType = request.headers.get('content-type') ?? '';
     
     if (contentType.includes('multipart/form-data')) {
       // 处理FormData（文件上传）
       const formData = await request.formData();
       file = formData.get('file') as File;
       imageUrl = formData.get('imageUrl') as string;
-      modelType = (formData.get('modelType') as string) || 'general';
-      language = (formData.get('language') as string) || 'en';
+      modelType = (formData.get('modelType') as string) ?? 'general';
+      language = (formData.get('language') as string) ?? 'en';
     } else {
       // 处理JSON数据（URL上传）
-      const body = await request.json();
-      imageUrl = body.imageUrl;
-      modelType = body.modelType || 'general';
-      language = body.language || 'en';
+      const body = await request.json() as {
+        imageUrl?: string;
+        modelType?: string;
+        language?: string;
+      };
+      imageUrl = body.imageUrl ?? null;
+      modelType = body.modelType ?? 'general';
+      language = body.language ?? 'en';
     }
 
     let fileId: string;

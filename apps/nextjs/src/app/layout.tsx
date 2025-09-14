@@ -20,11 +20,11 @@ import { Providers } from "~/components/providers";
 // import { Suspense } from "react";
 // import { PostHogPageview } from "~/config/providers";
 
-const fontSans = {
+const _fontSans = {
   variable: "--font-sans",
 };
 
-const fontMono = {
+const _fontMono = {
   variable: "--font-mono",
 };
 

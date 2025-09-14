@@ -43,13 +43,16 @@ export default function ImageToPromptPage() {
         body: formData,
       });
 
-      const result = await response.json();
+      const result = await response.json() as {
+        error?: string;
+        prompt?: string;
+      };
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to generate prompt');
+        throw new Error(result.error ?? 'Failed to generate prompt');
       }
 
-      setPrompt(result.prompt);
+      setPrompt(result.prompt ?? '');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
