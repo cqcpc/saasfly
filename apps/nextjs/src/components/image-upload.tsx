@@ -93,7 +93,7 @@ export function ImageUpload({
               onClick={onImageRemove}
               disabled={isUploading}
             >
-              <Icons.X className="h-4 w-4" />
+              <Icons.Close className="h-4 w-4" />
             </Button>
           </div>
         </CardContent>
@@ -112,14 +112,13 @@ export function ImageUpload({
       )}
     >
       <CardContent className="p-0">
-        <div
-          {...getRootProps()}
+        <div {...getRootProps()}
           className="flex min-h-[300px] cursor-pointer flex-col items-center justify-center p-8 text-center"
         >
           <input {...getInputProps()} />
           <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
             <div className="mb-4 rounded-full bg-muted p-4">
-              <Icons.Upload className="h-8 w-8 text-muted-foreground" />
+              <Icons.Image className="h-8 w-8 text-muted-foreground" />
             </div>
             <h3 className="mb-2 text-lg font-semibold">
               {isDragActive || dragActive
@@ -133,7 +132,7 @@ export function ImageUpload({
               Supports JPG, PNG, GIF, WebP (max 10MB)
             </p>
             <Button variant="outline" className="mt-4" type="button">
-              <Icons.Upload className="mr-2 h-4 w-4" />
+              <Icons.Image className="mr-2 h-4 w-4" />
               Choose File
             </Button>
           </div>

@@ -35,10 +35,10 @@ export function MobileNav({ items, children, menuItemClick }: MobileNavProps) {
             return (
               <Link
                 key={index}
-                href={item.disabled || isDisabledLink ? "#" : item.href}
+                href={item.disabled ?? isDisabledLink ? "#" : item.href}
                 className={cn(
                   "flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline",
-                  (item.disabled || isDisabledLink) && "cursor-not-allowed opacity-60",
+                  (item.disabled ?? isDisabledLink) && "cursor-not-allowed opacity-60",
                 )}
                 onClick={(e) => {
                   if (isDisabledLink) {

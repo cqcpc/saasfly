@@ -1,9 +1,35 @@
-import { NextRequest } from 'next/server';
+// 移除未使用的import
+
+// 类型定义
+interface CozeFileUploadResponse {
+  code: number;
+  data: {
+    id: string;
+  };
+}
+
+interface CozeWorkflowResponse {
+  code: number;
+  data: {
+    execute_id?: string;
+    status?: string;
+    result?: string;
+    output?: string;
+  } | string;
+}
+
+interface CozeWorkflowRetrieveResponse {
+  code: number;
+  data: {
+    status: string;
+    output?: string;
+  };
+}
 
 // 扣子API配置
 const COZE_API_TOKEN = process.env.COZE_API_TOKEN;
 const COZE_WORKFLOW_ID = process.env.COZE_WORKFLOW_ID;
-const COZE_API_BASE_URL = process.env.COZE_API_BASE_URL || 'https://api.coze.cn';
+const COZE_API_BASE_URL = process.env.COZE_API_BASE_URL ?? 'https://api.coze.cn';
 
 if (!COZE_API_TOKEN || !COZE_WORKFLOW_ID) {
   throw new Error('Missing COZE_API_TOKEN or COZE_WORKFLOW_ID in environment variables');
@@ -32,7 +58,7 @@ export async function uploadFileToCoze(file: File): Promise<string> {
       throw new Error(`File upload failed: ${response.status} ${errorText}`);
     }
 
-    const result = await response.json();
+    const result = await response.json() as CozeFileUploadResponse;
     console.log('File upload successful:', result);
     return result.data.id; // 返回文件ID
   } catch (error) {
@@ -79,7 +105,7 @@ export async function runCozeWorkflow(fileId: string, modelType: string, languag
     throw new Error(`Workflow API failed: ${response.status} ${errorText}`);
   }
 
-  const result = await response.json();
+  const result = await response.json() as CozeWorkflowResponse;
   
   console.log('Coze workflow response:', JSON.stringify(result, null, 2));
   
@@ -89,17 +115,17 @@ export async function runCozeWorkflow(fileId: string, modelType: string, languag
   }
   
   // 如果直接返回了data字段（同步执行完成）
-  if (result.data && typeof result.data === 'string') {
+  if (typeof result.data === 'string') {
     return result.data;
   }
   
   // 检查是否是异步执行的响应格式
-  if (result.data && result.data.execute_id) {
+  if (typeof result.data === 'object' && result.data.execute_id) {
     return await pollWorkflowResult(result.data.execute_id);
   }
   
   // 检查是否是同步执行完成的响应格式
-  if (result.data && result.data.status === 'completed' && result.data.result) {
+  if (typeof result.data === 'object' && result.data.status === 'completed' && result.data.result) {
     return result.data.result;
   }
   
@@ -123,10 +149,10 @@ async function pollWorkflowResult(executeId: string): Promise<string> {
       throw new Error(`Failed to retrieve workflow result: ${response.status}`);
     }
 
-    const result = await response.json();
+    const result = await response.json() as CozeWorkflowRetrieveResponse;
     
     if (result.data.status === 'completed') {
-      return result.data.output || 'No prompt generated';
+      return result.data.output ?? 'No prompt generated';
     } else if (result.data.status === 'failed') {
       throw new Error('Workflow execution failed');
     }

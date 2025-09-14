@@ -66,17 +66,17 @@ export function NavBar({
                   return (
                     <Link
                       key={index}
-                      href={item.disabled || isDisabledLink ? "#" : (item.href.startsWith("http") ? item.href : `/${lang}${item.href}`)}
+                      href={item.disabled ?? isDisabledLink ? "#" : (item.href.startsWith("http") ? item.href : `/${lang}${item.href}`)}
                       className={cn(
                         "flex items-center text-base font-medium transition-colors text-black hover:text-black group",
                         item.href.startsWith(`/${segment}`)
                           ? "font-semibold"
                           : "",
-                        (item.disabled || isDisabledLink) && "cursor-not-allowed opacity-60",
+                        (item.disabled ?? isDisabledLink) && "cursor-not-allowed opacity-60",
                       )}
                       style={{
                          fontSize: '16px',
-                         color: (item.href.startsWith(`/${segment}`) || item.title === 'Home') ? '#7f00ff' : '#000000'
+                         color: (item.href.startsWith(`/${segment}`) ?? item.title === 'Home') ? '#7f00ff' : '#000000'
                        }}
                        onMouseEnter={(e) => {
                          if (!isDisabledLink) {

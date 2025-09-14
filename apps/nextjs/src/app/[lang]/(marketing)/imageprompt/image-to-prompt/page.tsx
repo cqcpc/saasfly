@@ -91,7 +91,7 @@ export default function ImageToPromptPage() {
     e.stopPropagation();
     setDragActive(false);
     
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+    if (e.dataTransfer.files?.[0]) {
       handleFileSelect(e.dataTransfer.files[0]);
     }
   }, [handleFileSelect]);
@@ -167,13 +167,16 @@ export default function ImageToPromptPage() {
         throw new Error('No image file or URL provided');
       }
       
-      const result = await response.json();
+      const result = await response.json() as {
+        error?: string;
+        prompt?: string;
+      };
       
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to generate prompt');
+        throw new Error(result.error ?? 'Failed to generate prompt');
       }
       
-      setGeneratedPrompt(result.prompt);
+      setGeneratedPrompt(result.prompt ?? '');
     } catch (error) {
       console.error('Generate prompt error:', error);
       setError(error instanceof Error ? error.message : "生成提示词时出错，请重试");
@@ -370,8 +373,10 @@ export default function ImageToPromptPage() {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {AI_MODELS.map((model) => (
+                  // eslint-disable-next-line jsx-a11y/label-has-associated-control
                   <label
                     key={model.id}
+                    htmlFor={`model-${model.id}`}
                     className={cn(
                       "flex items-start space-x-2 sm:space-x-3 p-3 sm:p-4 rounded-lg border-2 cursor-pointer transition-colors",
                       selectedModel === model.id
@@ -380,6 +385,7 @@ export default function ImageToPromptPage() {
                     )}
                   >
                     <input
+                      id={`model-${model.id}`}
                       type="radio"
                       name="model"
                       value={model.id}
@@ -400,10 +406,11 @@ export default function ImageToPromptPage() {
             <div className="bg-white rounded-lg p-4 sm:p-6">
               <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 items-end">
                 <div>
-                  <label className="block text-base sm:text-lg font-bold text-gray-700 mb-2">
+                  <label htmlFor="language-select" className="block text-base sm:text-lg font-bold text-gray-700 mb-2">
                     Prompt Language
                   </label>
                   <select
+                    id="language-select"
                     value={selectedLanguage}
                     onChange={(e) => setSelectedLanguage(e.target.value)}
                     className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base"
