@@ -1,7 +1,9 @@
 // @ts-check
 import "./src/env.mjs";
 import "@saasfly/auth/env.mjs";
+import "@saasfly/auth/env.mjs";
 
+// import "@saasfly/api/env"
 import { withNextDevtools } from "@next-devtools/core/plugin";
 // import "@saasfly/api/env"
 import withMDX from "@next/mdx";
@@ -13,17 +15,19 @@ const config = {
   reactStrictMode: true,
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
+    "@saasfly/stripe",
     "@saasfly/api",
     "@saasfly/auth",
     "@saasfly/db",
     "@saasfly/common",
+    // serverActions: true,
     "@saasfly/ui",
     "@saasfly/stripe",
   ],
   pageExtensions: ["ts", "tsx", "mdx"],
   experimental: {
     mdxRs: true,
-    // serverActions: true,
+    serverComponentsExternalPackages: ["@vercel/postgres"],
   },
   images: {
     domains: ["images.unsplash.com", "avatars.githubusercontent.com", "www.twillot.com", "cdnv2.ruguoapp.com", "www.setupyourpay.com"],
