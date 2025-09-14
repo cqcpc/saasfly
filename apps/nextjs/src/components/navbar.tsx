@@ -72,13 +72,13 @@ export function NavBar({
                     )}
                     style={{
                        fontSize: '16px',
-                       color: item.href.startsWith(`/${segment}`) ? '#7f00ff' : '#000000'
+                       color: (item.href.startsWith(`/${segment}`) || item.title === 'Home') ? '#7f00ff' : '#000000'
                      }}
                      onMouseEnter={(e) => {
                        e.currentTarget.style.color = '#7f00ff';
                      }}
                      onMouseLeave={(e) => {
-                       e.currentTarget.style.color = item.href.startsWith(`/${segment}`) ? '#7f00ff' : '#000000';
+                       e.currentTarget.style.color = (item.href.startsWith(`/${segment}`) || item.title === 'Home') ? '#7f00ff' : '#000000';
                      }}
                   >
                     {item.title}
