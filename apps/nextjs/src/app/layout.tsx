@@ -76,14 +76,14 @@ export const metadata = {
   // manifest: `${siteConfig.url}/site.webmanifest`,
 };
 
-import { getServerSession, authOptions } from "@saasfly/auth";
+import { getCurrentUser } from "@saasfly/auth";
 
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+  const user = await getCurrentUser();
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
