@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import _Link from "next/link";
+import Link from "next/link";
 
-import { Button as _Button } from "@saasfly/ui/button";
+import { Button } from "@saasfly/ui/button";
 import * as Icons from "@saasfly/ui/icons";
 
 export default function ImagePromptPage() {
@@ -133,7 +133,7 @@ export default function ImagePromptPage() {
               The most comprehensive AI image toolkit for creators, designers, and developers
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 justify-items-center max-w-6xl mx-auto">
             <div className="text-center bg-white/90 backdrop-blur-sm rounded-lg p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
               <div className="mx-auto h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 bg-blue-100 rounded-lg flex items-center justify-center mb-3 sm:mb-4 md:mb-6">
                 <Icons.Rocket className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-blue-600" />
@@ -182,7 +182,7 @@ export default function ImagePromptPage() {
               Transform your creative workflow with our AI-powered tools in just a few simple steps
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             <div className="text-center bg-white/90 backdrop-blur-sm rounded-lg p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
               <div className="mx-auto h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 bg-blue-100 rounded-full flex items-center justify-center mb-3 sm:mb-4 md:mb-6">
                 <span className="text-lg sm:text-xl md:text-2xl font-bold text-blue-600">1</span>
