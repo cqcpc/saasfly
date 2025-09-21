@@ -5,8 +5,15 @@ import Link from "next/link";
 
 import { Button } from "@saasfly/ui/button";
 import * as Icons from "@saasfly/ui/icons";
+import type { Locale } from "~/config/i18n-config";
 
-export default function ImagePromptPage() {
+export default function ImagePromptPage({
+  params: { lang },
+}: {
+  params: {
+    lang: Locale;
+  };
+}) {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -20,9 +27,9 @@ export default function ImagePromptPage() {
               A complete suite of AI tools covering every aspect of your image creation journey
             </p>
             <div className="mt-4 sm:mt-6 md:mt-8 flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 justify-center items-center max-w-md sm:max-w-none mx-auto">
-              <a href="/en/imageprompt/image-to-prompt" className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors text-sm md:text-base">
+              <Link href={`/${lang}/imageprompt/image-to-prompt`} className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors text-sm md:text-base">
                 Try it now !
-              </a>
+              </Link>
               <span className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 border border-gray-300 text-gray-400 font-medium rounded-lg cursor-not-allowed transition-colors text-sm md:text-base">
                 Tutorials
               </span>
@@ -54,12 +61,12 @@ export default function ImagePromptPage() {
               <p className="text-xs sm:text-sm md:text-base text-gray-600 mb-3 sm:mb-4 leading-relaxed">
                 Extract detailed prompts from any image to recreate or modify AI-generated art
               </p>
-              <a href="/en/imageprompt/image-to-prompt" className="inline-flex items-center text-purple-600 hover:text-purple-700 font-medium text-xs sm:text-sm md:text-base">
+              <Link href={`/${lang}/imageprompt/image-to-prompt`} className="inline-flex items-center text-purple-600 hover:text-purple-700 font-medium text-xs sm:text-sm md:text-base">
                 Try now
                 <svg className="w-3 h-3 sm:w-4 sm:h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
-              </a>
+              </Link>
             </div>
 
             {/* Magic Enhance */}
@@ -242,9 +249,9 @@ export default function ImagePromptPage() {
               Join thousands of creators who are already using our AI tools to enhance their workflow
             </p>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 justify-center items-center max-w-md sm:max-w-none mx-auto">
-              <a href="/en/imageprompt/image-to-prompt" className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 bg-white text-purple-600 font-medium rounded-lg hover:bg-gray-50 transition-colors text-sm md:text-base">
+              <Link href={`/${lang}/imageprompt/image-to-prompt`} className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 bg-white text-purple-600 font-medium rounded-lg hover:bg-gray-50 transition-colors text-sm md:text-base">
                 Get Started Free
-              </a>
+              </Link>
               <span className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 border border-gray-300 text-gray-400 font-medium rounded-lg cursor-not-allowed transition-colors text-sm md:text-base">
                 Learn More
               </span>
