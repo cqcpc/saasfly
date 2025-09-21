@@ -1,19 +1,20 @@
 import { match as matchLocale } from "@formatjs/intl-localematcher";
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from 'next/server';
+import { getToken } from "next-auth/jwt";
 import Negotiator from "negotiator";
 
 import { i18n } from "~/config/i18n-config";
 import { env } from "@saasfly/auth/env.mjs";
 
-const noNeedProcessRoute = [".*\\.png", ".*\\.jpg", ".*\\.opengraph-image.png"];
+const noNeedProcessRoute = [".*\\.png", ".*\\.jpg", ".*\\.svg", ".*\\.ico", ".*\\.webp", ".*\\.opengraph-image.png", "/_next/.*", "/__next_devtools__/.*", "/favicon.ico", "^/api/.*", "^/trpc/.*"];
 
-const noRedirectRoute = ["/api(.*)", "/trpc(.*)", "/admin"];
+const noRedirectRoute = ["^/api/.*", "^/trpc/.*", "^/admin.*"];
 
-export const isPublicRoute = createRouteMatcher([
+const publicRoutes = [
   new RegExp("/(\\w{2}/)?signin(.*)"),
   new RegExp("/(\\w{2}/)?login(.*)"),
   new RegExp("/(\\w{2}/)?register(.*)"),
+  new RegExp("/(\\w{2}/)?imageprompt(.*)"),
   new RegExp("/(\\w{2}/)?terms(.*)"),
   new RegExp("/(\\w{2}/)?privacy(.*)"),
   new RegExp("/(\\w{2}/)?docs(.*)"),
@@ -21,7 +22,12 @@ export const isPublicRoute = createRouteMatcher([
   new RegExp("/(\\w{2}/)?pricing(.*)"),
   new RegExp("^/\\w{2}$"), // root with locale
   new RegExp("^/$"), // root path
-])
+];
+
+export function isPublicRoute(request: NextRequest): boolean {
+  const pathname = request.nextUrl.pathname;
+  return publicRoutes.some((route) => route.test(pathname));
+}
 
 export function getLocale(request: NextRequest): string | undefined {
   // Negotiator expects plain object so we need to transform headers
@@ -45,17 +51,16 @@ export function isNoNeedProcess(request: NextRequest): boolean {
   return noNeedProcessRoute.some((route) => new RegExp(route).test(pathname));
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-export const middleware = clerkMiddleware(async (auth, req: NextRequest) => {
+export async function middleware(req: NextRequest) {
   if (isNoNeedProcess(req)) {
-    return null;
+    return NextResponse.next();
   }
 
   const isWebhooksRoute = req.nextUrl.pathname.startsWith("/api/webhooks/");
   if (isWebhooksRoute) {
     return NextResponse.next();
   }
+  
   const pathname = req.nextUrl.pathname;
   // Check if there is any supported locale in the pathname
   const pathnameIsMissingLocale = i18n.locales.every(
@@ -73,21 +78,17 @@ export const middleware = clerkMiddleware(async (auth, req: NextRequest) => {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   if (isPublicRoute(req)) {
-    return null;
+    return NextResponse.next();
   }
 
-  const { userId, sessionClaims } = await auth()
-
-  const isAuth = !!userId;
-  let isAdmin = false
-  if (env.ADMIN_EMAIL) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const isAuth = !!token;
+  let isAdmin = false;
+  
+  if (env.ADMIN_EMAIL && token?.email) {
     const adminEmails = env.ADMIN_EMAIL.split(",");
-    if (sessionClaims?.user?.email) {
-      isAdmin = adminEmails.includes(sessionClaims?.user?.email);
-    }
+    isAdmin = adminEmails.includes(token.email);
   }
 
   const isAuthPage = /^\/[a-zA-Z]{2,}\/(login|register|login-clerk)/.test(
@@ -95,27 +96,33 @@ export const middleware = clerkMiddleware(async (auth, req: NextRequest) => {
   );
   const isAuthRoute = req.nextUrl.pathname.startsWith("/api/trpc/");
   const locale = getLocale(req);
+  
   if (isAuthRoute && isAuth) {
     return NextResponse.next();
   }
+  
   if (req.nextUrl.pathname.startsWith("/admin/dashboard")) {
     if (!isAuth || !isAdmin)
       return NextResponse.redirect(new URL(`/admin/login`, req.url));
     return NextResponse.next();
   }
+  
   if (isAuthPage) {
     if (isAuth) {
       return NextResponse.redirect(new URL(`/${locale}/dashboard`, req.url));
     }
-    return null;
+    return NextResponse.next();
   }
+  
   if (!isAuth) {
     let from = req.nextUrl.pathname;
     if (req.nextUrl.search) {
       from += req.nextUrl.search;
     }
     return NextResponse.redirect(
-      new URL(`/${locale}/login?from=${encodeURIComponent(from)}`, req.url),
+      new URL(`/${locale}/imageprompt?from=${encodeURIComponent(from)}`, req.url),
     );
   }
-})
+  
+  return NextResponse.next();
+}
