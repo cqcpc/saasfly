@@ -91,7 +91,7 @@ export default function ImageToPromptPage() {
     e.stopPropagation();
     setDragActive(false);
     
-    if (e.dataTransfer.files?.[0]) {
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFileSelect(e.dataTransfer.files[0]);
     }
   }, [handleFileSelect]);
@@ -137,53 +137,24 @@ export default function ImageToPromptPage() {
     setError("");
     
     try {
-      let response;
+      // 这里应该调用实际的AI API
+      // 暂时使用模拟数据
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      if (imageFile) {
-        // 使用FormData上传文件
-        const formData = new FormData();
-        formData.append('file', imageFile);
-        formData.append('modelType', selectedModel);
-        formData.append('language', selectedLanguage);
-        
-        response = await fetch('/api/image-to-prompt', {
-          method: 'POST',
-          body: formData,
-        });
-      } else if (imageUrl) {
-        // 使用JSON发送URL
-        response = await fetch('/api/image-to-prompt', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            imageUrl: imageUrl,
-            modelType: selectedModel,
-            language: selectedLanguage,
-          }),
-        });
-      } else {
-        throw new Error('No image file or URL provided');
-      }
-      
-      const result = await response.json() as {
-        error?: string;
-        prompt?: string;
+      const mockPrompts = {
+        general: "A beautiful landscape with mountains in the background, clear blue sky, and green meadows in the foreground. The scene is peaceful and serene with natural lighting.",
+        flux: "landscape, mountains, blue sky, meadows, natural lighting, peaceful, serene",
+        midjourney: "beautiful landscape with mountains --ar 16:9 --v 6 --style raw --quality 2",
+        "stable-diffusion": "(beautiful landscape:1.2), mountains, blue sky, green meadows, natural lighting, peaceful, serene, high quality, detailed, photorealistic"
       };
       
-      if (!response.ok) {
-        throw new Error(result.error ?? 'Failed to generate prompt');
-      }
-      
-      setGeneratedPrompt(result.prompt ?? '');
+      setGeneratedPrompt(mockPrompts[selectedModel as keyof typeof mockPrompts] || mockPrompts.general);
     } catch (error) {
-      console.error('Generate prompt error:', error);
-      setError(error instanceof Error ? error.message : "生成提示词时出错，请重试");
+      setError("生成提示词时出错，请重试");
     } finally {
       setIsGenerating(false);
     }
-  }, [imagePreview, imageFile, imageUrl, selectedModel, selectedLanguage]);
+  }, [imagePreview, selectedModel]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -373,10 +344,8 @@ export default function ImageToPromptPage() {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {AI_MODELS.map((model) => (
-                  // eslint-disable-next-line jsx-a11y/label-has-associated-control
                   <label
                     key={model.id}
-                    htmlFor={`model-${model.id}`}
                     className={cn(
                       "flex items-start space-x-2 sm:space-x-3 p-3 sm:p-4 rounded-lg border-2 cursor-pointer transition-colors",
                       selectedModel === model.id
@@ -385,7 +354,6 @@ export default function ImageToPromptPage() {
                     )}
                   >
                     <input
-                      id={`model-${model.id}`}
                       type="radio"
                       name="model"
                       value={model.id}
@@ -402,55 +370,50 @@ export default function ImageToPromptPage() {
               </div>
             </div>
 
-            {/* Language Selection & Generate Button */}
+            {/* Language Selection */}
             <div className="bg-white rounded-lg p-4 sm:p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 items-end">
-                <div>
-                  <label htmlFor="language-select" className="block text-base sm:text-lg font-bold text-gray-700 mb-2">
-                    Prompt Language
-                  </label>
-                  <select
-                    id="language-select"
-                    value={selectedLanguage}
-                    onChange={(e) => setSelectedLanguage(e.target.value)}
-                    className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base"
-                  >
-                    {LANGUAGES.map((lang) => (
-                      <option key={lang.id} value={lang.id}>
-                        {lang.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                
-                <div>
-                  <Button
-                    onClick={handleGeneratePrompt}
-                    disabled={!imagePreview || isGenerating}
-                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-                  >
-                    {isGenerating ? (
-                       <>
-                         <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />
-                         Generating...
-                       </>
-                     ) : (
-                       <>
-                         <Icons.Rocket className="mr-2 h-4 w-4" />
-                         Generate Prompt
-                       </>
-                     )}
-                  </Button>
-                </div>
-
+              <div className="max-w-xs">
+                <label className="block text-base sm:text-lg font-bold text-gray-700 mb-2">
+                  Prompt Language
+                </label>
+                <select
+                  value={selectedLanguage}
+                  onChange={(e) => setSelectedLanguage(e.target.value)}
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base"
+                >
+                  {LANGUAGES.map((lang) => (
+                    <option key={lang.id} value={lang.id}>
+                      {lang.name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
             {/* Results */}
             <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
-                Generated Prompt
-              </h2>
+              {/* Generate Button */}
+              <div className="mb-4 sm:mb-6">
+                <Button
+                  onClick={handleGeneratePrompt}
+                  disabled={isGenerating || (!imageFile && !imageUrl.trim())}
+                  className="w-full max-w-xs bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors text-sm sm:text-base"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Icons.Sparkles className="mr-2 h-4 w-4" />
+                      Generate Prompt
+                    </>
+                    )}
+                  </Button>
+              </div>
+              
+
               
               <div className="min-h-[120px] p-3 sm:p-4 border border-gray-300 rounded-lg bg-gray-50">
                 {generatedPrompt ? (
