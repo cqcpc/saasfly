@@ -20,6 +20,7 @@ import { Providers } from "~/components/providers";
 // import { Suspense } from "react";
 // import { PostHogPageview } from "~/config/providers";
 
+
 const _fontSans = {
   variable: "--font-sans",
 };
@@ -27,6 +28,7 @@ const _fontSans = {
 const _fontMono = {
   variable: "--font-mono",
 };
+
 
 // Font files can be colocated inside of `pages`
 const fontHeading = localFont({

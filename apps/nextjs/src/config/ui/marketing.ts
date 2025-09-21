@@ -9,28 +9,28 @@ export const getMarketingConfig = async ({
     lang: Locale;
   };
 }): Promise<MarketingConfig> => {
-  const dict = await getDictionary(lang);
+  const _dict = await getDictionary(lang);
   return {
     mainNav: [
       {
-        title: "Libra AI",
-        href: "https://libra.dev/",
+        title: "Home",
+        href: `/`,
       },
       {
-        title: dict.marketing.main_nav_features,
-        href: `/#features`,
+        title: "Inspiration",
+        href: `/inspiration`,
       },
       {
-        title: dict.marketing.main_nav_pricing,
+        title: "Tutorials",
+        href: `/tutorials`,
+      },
+      {
+        title: "Tools",
+        href: `/tools`,
+      },
+      {
+        title: "Pricing",
         href: `/pricing`,
-      },
-      {
-        title: dict.marketing.main_nav_blog,
-        href: `/blog`,
-      },
-      {
-        title: dict.marketing.main_nav_documentation,
-        href: `/docs`,
       },
     ],
   };

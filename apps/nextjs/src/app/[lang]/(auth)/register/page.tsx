@@ -4,8 +4,14 @@ import { cn } from "@saasfly/ui";
 import { buttonVariants } from "@saasfly/ui/button";
 
 import { UserAuthForm } from "~/components/user-auth-form";
-import type { Locale } from "~/config/i18n-config";
+import { i18n, type Locale } from "~/config/i18n-config";
 import { getDictionary } from "~/lib/get-dictionary";
+
+export function generateStaticParams() {
+  return i18n.locales.map((locale) => ({
+    lang: locale,
+  }));
+}
 
 export const metadata = {
   title: "Create an account",
