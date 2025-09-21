@@ -4,10 +4,9 @@
   },
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
-  "rootDirectory": "apps/nextjs",
   "framework": "nextjs",
   "functions": {
-    "apps/nextjs/src/app/**/*.{js,ts,tsx}": {
+    "src/app/**/*.{js,ts,tsx}": {
       "maxDuration": 30
     }
   }
