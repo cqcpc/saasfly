@@ -2,9 +2,10 @@
   "github": {
     "silent": true
   },
-  "buildCommand": "bun run build",
+  "buildCommand": "cd apps/nextjs && bun run build",
   "outputDirectory": "apps/nextjs/.next",
   "installCommand": "bun install",
+  "framework": "nextjs",
   "functions": {
     "apps/nextjs/src/app/**/*.{js,ts,tsx}": {
       "maxDuration": 30
