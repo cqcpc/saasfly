@@ -72,7 +72,7 @@ export async function runCozeWorkflow(fileId: string, modelType: string, languag
   const requestBody = {
       workflow_id: COZE_WORKFLOW_ID,
       parameters: {
-        userQuery: `Generate a detailed ${modelType} prompt for this image in ${language} language`,
+        userQuery: language === 'zh' ? `为这张图片生成详细的${modelType}提示词，请用中文回答` : `Generate a detailed ${modelType} prompt for this image in ${language} language`,
         img: {
           type: "file",
           file_id: fileId

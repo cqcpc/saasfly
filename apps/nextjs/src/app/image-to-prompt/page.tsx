@@ -13,7 +13,7 @@ export default function ImageToPromptPage() {
   const [imageUrl, setImageUrl] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [modelType, setModelType] = useState('general');
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState('zh');
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
