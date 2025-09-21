@@ -2,7 +2,8 @@
   "github": {
     "silent": true
   },
-  "buildCommand": "npm run build",
+  "installCommand": "bun install",
+  "buildCommand": "bun run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "functions": {
