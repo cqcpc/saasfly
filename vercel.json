@@ -4,7 +4,7 @@
   },
   "buildCommand": "cd apps/nextjs && npm run build",
   "outputDirectory": "apps/nextjs/.next",
-  "installCommand": "npm install",
+  "installCommand": "bun install",
   "framework": "nextjs",
   "functions": {
     "apps/nextjs/src/app/**/*.{js,ts,tsx}": {
