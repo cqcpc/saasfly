@@ -2,9 +2,10 @@
   "github": {
     "silent": true
   },
-  "buildCommand": "cd apps/nextjs && npm run build",
-  "outputDirectory": "apps/nextjs/.next",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
   "installCommand": "bun install",
+  "rootDirectory": "apps/nextjs",
   "framework": "nextjs",
   "functions": {
     "apps/nextjs/src/app/**/*.{js,ts,tsx}": {
