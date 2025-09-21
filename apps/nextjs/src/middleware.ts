@@ -20,6 +20,7 @@ export const isPublicRoute = createRouteMatcher([
   new RegExp("/(\\w{2}/)?blog(.*)"),
   new RegExp("/(\\w{2}/)?pricing(.*)"),
   new RegExp("^/\\w{2}$"), // root with locale
+  new RegExp("^/$"), // root path
 ])
 
 export function getLocale(request: NextRequest): string | undefined {
@@ -114,7 +115,7 @@ export const middleware = clerkMiddleware(async (auth, req: NextRequest) => {
       from += req.nextUrl.search;
     }
     return NextResponse.redirect(
-      new URL(`/${locale}/login-clerk?from=${encodeURIComponent(from)}`, req.url),
+      new URL(`/${locale}/login?from=${encodeURIComponent(from)}`, req.url),
     );
   }
 })
