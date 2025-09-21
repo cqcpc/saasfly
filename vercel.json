@@ -3,10 +3,12 @@
     "silent": true
   },
   "buildCommand": "bun run build",
-  "outputDirectory": "apps/nextjs/.next",
-  "installCommand": "bun install",
+  "outputDirectory": ".next",
+  "installCommand": "cd ../.. && bun install",
+  "framework": "nextjs",
+  "rootDirectory": "apps/nextjs",
   "functions": {
-    "apps/nextjs/src/app/**/*.{js,ts,tsx}": {
+    "src/app/**/*.{js,ts,tsx}": {
       "maxDuration": 30
     }
   }
