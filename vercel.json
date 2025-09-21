@@ -1,0 +1,14 @@
+{
+  "github": {
+    "silent": true
+  },
+  "installCommand": "bun install",
+  "buildCommand": "bun run build --filter=@saasfly/nextjs",
+  "outputDirectory": "apps/nextjs/.next",
+  "framework": "nextjs",
+  "functions": {
+    "apps/nextjs/src/app/**/*.{js,ts,tsx}": {
+      "maxDuration": 30
+    }
+  }
+}
