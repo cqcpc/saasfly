@@ -8,12 +8,12 @@ export default function RootPage() {
   
   useEffect(() => {
     // 客户端重定向，确保移动端正确处理
-    router.replace("/zh/login");
+    router.replace("/zh/imageprompt");
   }, [router]);
   
   // 立即重定向的备用方案
   if (typeof window !== 'undefined') {
-    window.location.href = '/zh/login';
+    window.location.href = '/zh/imageprompt';
   }
   
   return (
@@ -24,7 +24,7 @@ export default function RootPage() {
       height: '100vh',
       fontFamily: 'Arial, sans-serif'
     }}>
-      <div>正在跳转到登录页面...</div>
+      <div>正在跳转到 ImagePrompt 页面...</div>
     </div>
   );
 }

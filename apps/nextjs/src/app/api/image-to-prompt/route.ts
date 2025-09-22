@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { uploadFileToCoze, uploadImageUrlToCoze, runCozeWorkflow } from '~/lib/coze-api';
 
 export async function POST(request: NextRequest) {
+  console.log('=== Image to Prompt API Called ===');
+  console.log('Environment variables check:');
+  console.log('COZE_API_TOKEN:', process.env.COZE_API_TOKEN ? 'Present' : 'Missing');
+  console.log('COZE_WORKFLOW_ID:', process.env.COZE_WORKFLOW_ID ? 'Present' : 'Missing');
+  console.log('COZE_API_BASE_URL:', process.env.COZE_API_BASE_URL);
+  
   try {
     let file: File | null = null;
     let imageUrl: string | null = null;
@@ -34,6 +40,7 @@ export async function POST(request: NextRequest) {
 
     // 根据输入类型处理图片
     if (file) {
+      console.log('Processing file upload:', file.name, file.size, file.type);
       // 验证文件类型
       if (!file.type.startsWith('image/')) {
         return NextResponse.json(
@@ -50,8 +57,10 @@ export async function POST(request: NextRequest) {
         );
       }
 
+      console.log('Uploading file to Coze...');
       fileId = await uploadFileToCoze(file);
     } else if (imageUrl) {
+      console.log('Processing image URL:', imageUrl);
       fileId = await uploadImageUrlToCoze(imageUrl);
     } else {
       return NextResponse.json(
@@ -61,7 +70,9 @@ export async function POST(request: NextRequest) {
     }
 
     // 调用工作流生成提示词
+    console.log('Running Coze workflow with fileId:', fileId, 'modelType:', modelType, 'language:', language);
     const prompt = await runCozeWorkflow(fileId, modelType, language);
+    console.log('Workflow completed successfully');
 
     return NextResponse.json({
       success: true,

@@ -38,6 +38,7 @@ if (!COZE_API_TOKEN || !COZE_WORKFLOW_ID) {
 // 文件上传接口
 export async function uploadFileToCoze(file: File): Promise<string> {
   console.log('Uploading file to Coze:', file.name, file.size, file.type);
+  console.log('Using COZE_API_TOKEN:', COZE_API_TOKEN?.substring(0, 10) + '...');
   
   const formData = new FormData();
   formData.append('file', file);
@@ -167,6 +168,7 @@ async function pollWorkflowResult(executeId: string): Promise<string> {
 // 从URL上传图片到扣子
 export async function uploadImageUrlToCoze(imageUrl: string): Promise<string> {
   console.log('Downloading image from URL:', imageUrl);
+  console.log('Current COZE_API_TOKEN:', COZE_API_TOKEN?.substring(0, 15) + '...');
   
   try {
     // 先下载图片

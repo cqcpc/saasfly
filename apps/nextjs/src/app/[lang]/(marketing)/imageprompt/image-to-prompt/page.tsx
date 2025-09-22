@@ -137,24 +137,51 @@ export default function ImageToPromptPage() {
     setError("");
     
     try {
-      // 这里应该调用实际的AI API
-      // 暂时使用模拟数据
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      let response;
       
-      const mockPrompts = {
-        general: "A beautiful landscape with mountains in the background, clear blue sky, and green meadows in the foreground. The scene is peaceful and serene with natural lighting.",
-        flux: "landscape, mountains, blue sky, meadows, natural lighting, peaceful, serene",
-        midjourney: "beautiful landscape with mountains --ar 16:9 --v 6 --style raw --quality 2",
-        "stable-diffusion": "(beautiful landscape:1.2), mountains, blue sky, green meadows, natural lighting, peaceful, serene, high quality, detailed, photorealistic"
-      };
+      if (imageFile) {
+        // 文件上传方式
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('modelType', selectedModel);
+        formData.append('language', selectedLanguage);
+        
+        response = await fetch('/api/image-to-prompt', {
+          method: 'POST',
+          body: formData,
+        });
+      } else if (imageUrl) {
+        // URL方式
+        response = await fetch('/api/image-to-prompt', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            imageUrl: imageUrl,
+            modelType: selectedModel,
+            language: selectedLanguage,
+          }),
+        });
+      } else {
+        setError("请先上传图片");
+        return;
+      }
       
-      setGeneratedPrompt(mockPrompts[selectedModel as keyof typeof mockPrompts] || mockPrompts.general);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.details || errorData.error || '生成提示词失败');
+      }
+      
+      const result = await response.json();
+      setGeneratedPrompt(result.prompt);
     } catch (error) {
-      setError("生成提示词时出错，请重试");
+      console.error('Generate prompt error:', error);
+      setError(error instanceof Error ? error.message : "生成提示词时出错，请重试");
     } finally {
       setIsGenerating(false);
     }
-  }, [imagePreview, selectedModel]);
+  }, [imagePreview, selectedModel, selectedLanguage, imageFile, imageUrl]);
 
   return (
     <div className="min-h-screen bg-white">
