@@ -34,15 +34,11 @@ export default async function LoginPage({
       </Link>
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div className="flex flex-col space-y-2 text-center">
-          <Image
-            src="/images/avatars/saasfly-logo.svg"
-            className="mx-auto"
-            width="64"
-            height="64"
-            alt=""
-          />
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-pink-500">
+            <span className="text-2xl font-bold text-white">IP</span>
+          </div>
           <h1 className="text-2xl font-semibold tracking-tight">
-            {dict.login.welcome_back}
+            Welcome to ImagePrompt
           </h1>
           <p className="text-sm text-muted-foreground">
             {dict.login.signin_title}

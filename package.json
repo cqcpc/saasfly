@@ -18,12 +18,12 @@
     "gen": "turbo gen --config 'turbo/generators/config.ts'"
   },
   "devDependencies": {
-    "@turbo/gen": "1.13.3",
-    "check-dependency-version-consistency": "4.1.0",
-    "prettier": "3.2.5",
+    "@turbo/gen": "2.5.6",
+    "check-dependency-version-consistency": "5.0.1",
+    "prettier": "3.6.2",
     "tailwind-config-viewer": "^2.0.4",
-    "turbo": "1.13.3",
-    "typescript": "5.4.5"
+    "turbo": "2.5.6",
+    "typescript": "5.9.2"
   },
   "engines": {
     "node": ">=18"
@@ -34,7 +34,6 @@
     "packages/*",
     "tooling/*"
   ],
-  "packageManager": "bun@v1.1.10",
+  "packageManager": "bun@1.2.22",
   "dependencies": {}
-
 }
